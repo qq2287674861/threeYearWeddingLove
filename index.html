@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>给老婆的浪漫惊喜</title>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            font-family: 'Ma Shan Zheng', cursive;
+        }
+
+        @keyframes twinkle {
+            0% { background-position: 0 0; }
+            100% { background-position: -10000px 5000px; }
+        }
+
+        .stars, .stars2, .stars3 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            background: transparent;
+            z-index: -1;
+        }
+
+        .stars {
+            background-image: radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+                              radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+                              radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+                              radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
+                              radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)),
+                              radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            animation: twinkle 200s linear infinite;
+        }
+
+        .stars2 {
+            background-image: radial-gradient(1px 1px at 10px 50px, #eee, rgba(0,0,0,0)),
+                              radial-gradient(1px 1px at 80px 30px, #fff, rgba(0,0,0,0)),
+                              radial-gradient(1px 1px at 120px 100px, #ddd, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 300px 300px;
+            animation: twinkle 150s linear infinite;
+        }
+
+        .stars3 {
+            background-image: radial-gradient(3px 3px at 50px 50px, #fff, rgba(0,0,0,0)),
+                              radial-gradient(3px 3px at 100px 100px, #ddd, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 400px 400px;
+            animation: twinkle 100s linear infinite;
+        }
+
+        @keyframes move-fog {
+            0% { transform: translate(-10vw, -10vh) scale(1); }
+            50% { transform: translate(10vw, 10vh) scale(1.2); }
+            100% { transform: translate(-10vw, -10vh) scale(1); }
+        }
+
+        .fog {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            filter: blur(50px);
+            animation: move-fog 40s linear infinite alternate;
+            z-index: -1;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .container::after {
+            content: '点击屏幕开启浪漫';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3vmin;
+            color: rgba(255, 255, 255, 0.6);
+            font-family: "Microsoft YaHei", sans-serif;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 50;
+            animation: fade-in-out 3s ease-in-out forwards;
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+        }
+
+        @keyframes fade-in-out {
+            0% { opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .container.clicked::after {
+            display: none;
+        }
+
+        #petal-canvas,
+        #dust-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            mix-blend-mode: screen;
+        }
+
+        .message {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            text-align: center;
+            pointer-events: none;
+            z-index: 100;
+            transition: opacity 0.5s ease;
+        }
+
+        .couple-name {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 8vmin;
+            color: #E8B4B8;
+            font-family: 'Ma Shan Zheng', cursive;
+            text-shadow: 0 0 15px rgba(232, 180, 184, 0.5);
+            z-index: 101;
+            pointer-events: all;
+            cursor: pointer;
+            animation: heartbeat 1.5s infinite ease-in-out;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .couple-name:hover {
+            color: #FF69B4;
+            text-shadow: 0 0 25px rgba(255, 105, 180, 0.8), 0 0 40px rgba(255, 105, 180, 0.5);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .couple-name:active {
+            transform: translate(-50%, -50%) scale(0.95);
+            animation: none;
+        }
+
+        .couple-name::after {
+            content: '👆';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3vmin;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            animation: none;
+        }
+
+        .couple-name:hover::after {
+            opacity: 1;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        .couple-name .click-hint {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5vmin;
+            color: #FFB6C1;
+            font-family: "Microsoft YaHei", sans-serif;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .couple-name:hover .click-hint {
+            opacity: 1;
+        }
+
+        .main-text-container {
+            position: absolute;
+            bottom: 0; /* 定位在底部 */
+            left: 50%;
+            transform: translate(-50%, 100%); /* 初始状态完全移出屏幕下方 */
+            width: 100%;
+            max-height: 50vh; /* 最大高度为屏幕的一半 */
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 20px;
+            border-top-left-radius: 20px; /* 顶部圆角 */
+            border-top-right-radius: 20px;
+            z-index: 102;
+            opacity: 1; /* 初始即不透明 */
+            pointer-events: none;
+            transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1); /* 更优雅的缓动曲线 */
+            font-size: 2.2vmin;
+            line-height: 1.8;
+            text-align: left;
+            box-sizing: border-box;
+        }
+
+        .main-text-container.show {
+            transform: translate(-50%, 0);
+            pointer-events: all;
+        }
+
+        .main-text-container.show:hover {
+            background: rgba(0, 0, 0, 0.85);
+            box-shadow: 0 -5px 30px rgba(255, 105, 180, 0.3);
+        }
+
+        .main-text-container.show::before {
+            content: '↑ 点击收起';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5vmin;
+            color: #FFB6C1;
+            font-family: "Microsoft YaHei", sans-serif;
+            white-space: nowrap;
+            opacity: 0.8;
+            animation: pulse-hint 2s infinite;
+        }
+
+        @keyframes pulse-hint {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes heartbeat {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            15% { transform: translate(-50%, -50%) scale(1.08); }
+            30% { transform: translate(-50%, -50%) scale(1); }
+            45% { transform: translate(-50%, -50%) scale(1.08); }
+            60% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .message.show {
+            opacity: 1;
+        }
+
+        .date-range {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 101;
+        }
+
+        .date-range p {
+            font-size: 4vmin;
+            color: #FFFFFF;
+            font-family: 'Ma Shan Zheng', cursive;
+            text-shadow:
+                0 0 10px #FFC0CB,
+                0 0 20px #FFC0CB,
+                0 0 30px #FFB6C1,
+                0 0 40px #FF69B4;
+            white-space: nowrap;
+            margin: 0;
+        }
+
+        .background-date {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+            opacity: 0.2;
+        }
+
+        .background-date p {
+            font-size: 25vmin;
+            color: #FFFFFF;
+            font-family: 'Ma Shan Zheng', cursive;
+            text-shadow:
+                0 0 10px #FFC0CB,
+                0 0 20px #FFC0CB,
+                0 0 30px #FFB6C1;
+            white-space: nowrap;
+            margin: 0;
+        }
+
+        .message p {
+            font-size: 10vmin;
+            color: #FF69B4;
+            font-family: 'Pacifico', cursive;
+            text-shadow:
+                0 0 10px #FFC0CB,
+                0 0 20px #FFC0CB,
+                0 0 30px #FFB6C1,
+                0 0 40px #FF69B4,
+                0 0 50px #FF1493,
+                0 0 60px #C71585;
+            white-space: nowrap;
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.2) translateY(40px) rotate(15deg);
+            }
+            60% {
+                opacity: 1;
+                transform: scale(1.05) translateY(-10px) rotate(-5deg);
+            }
+            80% {
+                transform: scale(0.95) translateY(5px) rotate(2deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0) rotate(0);
+            }
+        }
+
+        @keyframes glow {
+            0% {
+                text-shadow:
+                    0 0 10px #FFC0CB,
+                    0 0 20px #FFC0CB,
+                    0 0 30px #FFB6C1,
+                    0 0 40px #FF69B4,
+                    0 0 50px #FF1493,
+                    0 0 60px #C71585;
+            }
+            100% {
+                text-shadow:
+                    0 0 20px #FFC0CB,
+                    0 0 30px #FFB6C1,
+                    0 0 40px #FF69B4,
+                    0 0 50px #FF1493,
+                    0 0 60px #C71585,
+                    0 0 70px #C71585;
+            }
+        }
+
+        .message.show p {
+            animation: glow 2.5s infinite alternate;
+        }
+
+        .message.show span {
+            display: inline-block;
+            opacity: 0;
+            animation: fadeInScale 0.5s forwards;
+        }
+
+        .message.show span:nth-child(1) { animation-delay: 0.2s; }
+        .message.show span:nth-child(2) { animation-delay: 0.4s; }
+        .message.show span:nth-child(3) { animation-delay: 0.6s; }
+        .message.show span:nth-child(4) { animation-delay: 0.8s; }
+        .message.show span:nth-child(5) { animation-delay: 1.0s; }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #FF69B4;
+            transform: rotate(-45deg);
+            pointer-events: none;
+            animation: pulse 2s infinite;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #FF69B4;
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            top: -10px;
+            left: 0;
+        }
+
+        .heart::after {
+            top: 0;
+            left: 10px;
+        }
+
+        /* 白色闪光环样式 */
+        .heart-aura-container {
+            position: absolute;
+            top: 47.5%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vmin;
+            height: 50vmin;
+            pointer-events: none;
+            z-index: 90;
+        }
+
+        .aura-sparkle {
+            position: absolute;
+            font-size: 2vmin;
+            color: #FFFFFF;
+            /* 极高亮度阴影叠加 */
+            text-shadow: 
+                0 0 5px #FFF,
+                0 0 10px #FFF,
+                0 0 20px #FFF,
+                0 0 40px #00FFFF,
+                0 0 80px #FFF;
+            animation: white-flash 1s ease-in-out infinite;
+            opacity: 0;
+        }
+
+        @keyframes white-flash {
+            0% { transform: scale(0); opacity: 0; filter: brightness(1); }
+            50% { transform: scale(1.5); opacity: 1; filter: brightness(3); }
+            100% { transform: scale(0); opacity: 0; filter: brightness(1); }
+        }
+
+        @media (max-width: 768px) {
+            .message p {
+                font-size: 10vmin;
+            }
+            .couple-name {
+                font-size: 8vmin;
+            }
+        }
+
+        /* 微信跳转引导遮罩 */
+        #wechat-mask {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
+            color: #fff;
+            text-align: right;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #wechat-mask img {
+            width: 80%;
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+
+        #wechat-mask p {
+            font-size: 20px;
+            line-height: 1.6;
+            margin-right: 20px;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        .highlight-text {
+            color: #FFD700;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="wechat-mask">
+        <p>点击右上角 <span class="highlight-text">三个点</span></p>
+        <p>选择 <span class="highlight-text">在浏览器中打开</span></p>
+        <p>以获得最佳浪漫体验 🌹</p>
+    </div>
+    <div class="stars"></div>
+    <div class="stars2"></div>
+    <div class="stars3"></div>
+    <div class="fog"></div>
+    <div class="container">
+        <div class="heart-aura-container" id="heart-aura"></div>
+        <canvas id="petal-canvas"></canvas>
+        <canvas id="dust-canvas"></canvas>
+        <div class="date-range">
+            <p>2023年3月22日至2026年3月22日</p>
+        </div>
+        <div class="background-date">
+            <p>2026.3.22</p>
+        </div>
+        <div class="message">
+            <p>
+                <span>三</span><span>周</span><span>年</span><span>快</span><span>乐</span>
+            </p>
+        </div>
+        <div class="couple-name">
+            徐航❤️张萍
+            <span class="click-hint">点击查看信</span>
+        </div>
+        <div class="main-text-container">
+            <p>亲爱的老婆，不知不觉结婚都已经三年，有很多话，又不知道从哪里说起，虽然我们感情很好，还是想着留点老了还会萌动的回忆，回首来时路，恋爱、生子、外公生病、儿子两岁、你考上责任组长、还要准备主管考试、妈身体出现问题，日子过得紧凑了点，压力也是一波接着一波，虽然，不至于日子没法过，但也是缺一个人都不行，想想今年跑外卖为了什么，可能也是为了解决自己的焦虑，我解决不了了，就想着早点挣点钱，身上备着，心理也舒坦，人无远虑必有近忧，所以，我常常深思熟虑，每个人都有自己的生活方式，活着开心就好，我也希望，我老婆开心，我们的小家以后能顺顺利利，我从来不求大富大贵，只要老了以后有点钱花花，年轻的时候，能全中国、全世界的我们一起跑一跑，尝一尝各地的美食，也许，愿望不能实现，生活也会改变，但是，就像结婚誓词里说的一样，“我愿意她（他）成为我的妻子（丈夫），从今天开始相互拥有、相互扶持，无论是顺境还是逆境，富裕还是贫穷，疾病还是健康，都彼此相爱、珍惜，直到死亡才能将我们分开。</p>
+        </div>
+    </div>
+    <audio id="bg-music" src="background_music.mp3" loop></audio>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 微信环境检测逻辑
+            const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+            if (isWeChat) {
+                document.getElementById('wechat-mask').style.display = 'block';
+                // 停止背景音乐加载以节省流量
+                const music = document.getElementById('bg-music');
+                music.src = "";
+                return; // 阻止后续特效逻辑运行
+            }
+
+            const effectConfig = {
+                angel: {
+                    particlesPerSecond: 30,
+                    lifeTime: 1200,
+                    sizeRange: [0.2, 0.5],
+                    colors: ['#FFF8E1', '#FFFFFF'],
+                    blendMode: 'screen'
+                },
+                rose: {
+                    petalCount: 50,
+                    animationDuration: 8000
+                }
+            };
+
+            const container = document.querySelector('.container');
+            const canvas = document.getElementById('petal-canvas');
+            const ctx = canvas.getContext('2d');
+            const dustCanvas = document.getElementById('dust-canvas');
+            const dustCtx = dustCanvas.getContext('2d');
+            const message = document.querySelector('.message');
+            const music = document.getElementById('bg-music');
+
+            let animationFrameId;
+            let petals = [];
+            let particles = [];
+            let mouse = { x: null, y: null, speed: 0 };
+            let animationStartTime;
+
+            class AngelParticle {
+                constructor(x, y, speed) {
+                    this.x = x;
+                    this.y = y;
+                    this.size = (Math.random() * (effectConfig.angel.sizeRange[1] - effectConfig.angel.sizeRange[0]) + effectConfig.angel.sizeRange[0]) * 10;
+                    const speedFactor = Math.min(speed * 0.1, 5);
+                    this.speedX = (Math.random() - 0.5) * speedFactor;
+                    this.speedY = (Math.random() - 0.5) * speedFactor;
+                    this.life = 1.0;
+                    this.decay = 1 / (60 * (effectConfig.angel.lifeTime / 1000));
+                    this.color = effectConfig.angel.colors[Math.floor(Math.random() * effectConfig.angel.colors.length)];
+                }
+
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    this.life -= this.decay;
+                }
+
+                draw() {
+                    const opacity = Math.max(0.2, this.life);
+                    dustCtx.save();
+                    dustCtx.globalCompositeOperation = effectConfig.angel.blendMode;
+                    const gradient = dustCtx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+                    gradient.addColorStop(0, this.color);
+                    gradient.addColorStop(1, 'transparent');
+                    dustCtx.globalAlpha = opacity;
+                    dustCtx.fillStyle = gradient;
+                    dustCtx.beginPath();
+                    dustCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    dustCtx.fill();
+                    dustCtx.restore();
+                }
+            }
+
+            function setCanvasSize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                dustCanvas.width = window.innerWidth;
+                dustCanvas.height = window.innerHeight;
+            }
+
+            setCanvasSize();
+            window.addEventListener('resize', setCanvasSize);
+
+            class Petal {
+                constructor() {
+                    this.reset();
+                }
+
+                reset() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = -50 - Math.random() * 50; // 从屏幕外开始
+                    this.z = Math.random() * 600 + 200; // 景深
+                    this.size = 20 + Math.random() * 15;
+                    
+                    // 简化后的物理属性，追求平滑
+                    this.opacity = (this.z / 800) * 0.7 + 0.2;
+                    this.rotation = Math.random() * Math.PI;
+                    this.rotationSpeed = (Math.random() - 0.5) * 0.02; // 更慢、更柔和的旋转
+                    this.fallSpeed = 1 + (this.z / 800);
+                    this.sway = Math.random() * Math.PI;
+
+                    // 简化的唯美材质
+                    const baseHue = 350; // 经典的玫瑰粉色
+                    const lightness = 50 + Math.random() * 10;
+                    this.color1 = `hsla(${baseHue}, 90%, ${lightness}%, ${this.opacity})`;
+                    this.color2 = `hsla(${baseHue}, 80%, ${lightness - 20}%, ${this.opacity * 0.7})`;
+                }
+
+                draw() {
+                    ctx.save();
+                    
+                    const scale = (this.z / 800) * 0.8 + 0.2;
+                    ctx.translate(this.x, this.y);
+                    ctx.scale(scale, scale);
+                    ctx.rotate(this.rotation);
+                    
+                    // 绘制更经典、对称的玫瑰花瓣形状
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.bezierCurveTo(this.size, this.size * 0.8, this.size * 0.6, this.size * 1.8, 0, this.size * 2);
+                    ctx.bezierCurveTo(-this.size * 0.6, this.size * 1.8, -this.size, this.size * 0.8, 0, 0);
+
+                    const gradient = ctx.createLinearGradient(0, 0, 0, this.size * 2);
+                    gradient.addColorStop(0, this.color1);
+                    gradient.addColorStop(1, this.color2);
+                    ctx.fillStyle = gradient;
+                    
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                update() {
+                    this.y += this.fallSpeed;
+                    this.rotation += this.rotationSpeed;
+                    
+                    // 使用平滑的Sway（摇摆）代替Flutter（颤动）
+                    this.x += Math.sin(this.sway + this.y * 0.03) * 1.5;
+
+                    // 减弱鼠标交互效果
+                    if (mouse.x !== null && mouse.y !== null) {
+                        const dx = this.x - mouse.x;
+                        const dy = this.y - mouse.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 100) { // 减小交互半径
+                            const force = (100 - dist) / 100;
+                            this.x += (dx / dist) * force * 2; // 减小推力
+                            this.y += (dy / dist) * force * 1;
+                        }
+                    }
+
+                    // 边界处理
+                    if (this.y > canvas.height + 50) {
+                        this.reset();
+                    }
+                }
+            }
+
+            function createPetals() {
+                petals = [];
+                for (let i = 0; i < effectConfig.rose.petalCount; i++) {
+                    petals.push(new Petal());
+                }
+            }
+
+            let lastParticleTime = 0;
+            const particleInterval = 1000 / effectConfig.angel.particlesPerSecond;
+
+            function animate(timestamp) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                dustCtx.clearRect(0, 0, dustCanvas.width, dustCanvas.height);
+
+                petals.forEach(petal => {
+                    petal.update();
+                    petal.draw();
+                });
+
+                if (mouse.x !== null && mouse.y !== null) {
+                    if (timestamp - lastParticleTime > particleInterval) {
+                        particles.push(new AngelParticle(mouse.x, mouse.y, mouse.speed));
+                        lastParticleTime = timestamp;
+                    }
+                }
+
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+                    if (particles[i].life <= 0) {
+                        particles.splice(i, 1);
+                        i--;
+                    }
+                }
+
+                if (animationStartTime) {
+                    const elapsedTime = (Date.now() - animationStartTime) / 1000;
+                    if (elapsedTime >= 2 && !message.classList.contains('show')) {
+                        message.classList.add('show');
+                    }
+                }
+
+                animationFrameId = requestAnimationFrame(animate);
+            }
+
+            function startAnimation() {
+                if (!animationStartTime) {
+                    createPetals();
+                    animationStartTime = Date.now();
+                    music.play().catch(() => {});
+                }
+            }
+
+            window.addEventListener('mousemove', (e) => {
+                if (mouse.x !== null) {
+                    const dx = e.clientX - mouse.x;
+                    const dy = e.clientY - mouse.y;
+                    mouse.speed = Math.sqrt(dx * dx + dy * dy);
+                }
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+
+            const coupleName = document.querySelector('.couple-name');
+            const mainTextContainer = document.querySelector('.main-text-container');
+
+            coupleName.addEventListener('click', () => {
+                mainTextContainer.classList.toggle('show');
+            });
+
+            container.addEventListener('click', (e) => {
+                // 避免点击姓名时触发全局点击事件
+                if (e.target !== coupleName) {
+                    container.classList.add('clicked');
+                    startAnimation();
+                    // 点击爆发效果
+                    for (let i = 0; i < 20; i++) {
+                        particles.push(new AngelParticle(e.clientX, e.clientY, 50));
+                    }
+                }
+            });
+
+            function createHearts() {
+                for (let i = 0; i < 20; i++) {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    heart.style.left = `${Math.random() * 100}vw`;
+                    heart.style.top = `${Math.random() * 100}vh`;
+                    heart.style.transform = `scale(${Math.random() * 0.5 + 0.5}) rotate(-45deg)`;
+                    heart.style.animationDelay = `${Math.random() * 2}s`;
+                    container.appendChild(heart);
+                }
+            }
+
+            createHearts();
+            
+            // 4. 实现白色闪光环特效
+            function createWhiteAura() {
+                const auraContainer = document.getElementById('heart-aura');
+                auraContainer.innerHTML = ''; // 清空旧粒子
+                const sparkleCount = 60;
+
+                for (let i = 0; i < sparkleCount; i++) {
+                    const angle = (i / sparkleCount) * Math.PI * 2;
+                    // 使用百分比定位实现完美自适应
+                    const x = 50 + Math.cos(angle) * 50; 
+                    const y = 50 + Math.sin(angle) * 50;
+
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'aura-sparkle';
+                    sparkle.innerHTML = '✦';
+                    sparkle.style.left = `${x}%`;
+                    sparkle.style.top = `${y}%`;
+                    sparkle.style.transform = 'translate(-50%, -50%)'; // 居中修正
+                    sparkle.style.animationDelay = `${Math.random() * 1}s`;
+                    auraContainer.appendChild(sparkle);
+                }
+            }
+
+            createWhiteAura();
+            window.addEventListener('resize', createWhiteAura);
+
+            animate(0);
+        });
+    </script>
+</body>
+</html>
